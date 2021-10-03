@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="ja">
-	<head>
-		<meta charset="UTF-8">
-		<title>Mark Down で書けるブログ</title>
-	</head>
-	<body>
-		<a href="/">メインへ戻る</a>
-		<p>{{content.title}}</p>
-		<p>{{content.user.name}}</p>
-		<p>{{content.good_count}} good</p>
-		<p>{{content.body}}</p>
-	</body>
-</html>
+{% extends "base.html" %}
+
+{% block body %}
+
+<a href="/">メインへ戻る</a>
+<p>{{content.title}}</p>
+<p>{{content.user.name}}</p>
+<p>{{content.good_count}} good</p>
+<p>{{content.body}}</p>
+
+{% endblock %}
