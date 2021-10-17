@@ -1,6 +1,11 @@
-from flask import Flask,render_template,request,redirect,url_for
-from flask_login import LoginManager,login_user,logout_user,login_required
+from flask import Flask,render_template,request,redirect,url_for,abort
+from flask_login import LoginManager,login_user,logout_user,login_required,current_user
 from hashlib import sha256
+from PIL import Image
+
+import random,string
+import os
+
 from app import key
 
 
@@ -10,6 +15,7 @@ from app.models import db,Content,User
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config["SECRET_KEY"] = key.SECRET_KEY
+app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024
 
 @login_manager.user_loader
 def load_user(id):
@@ -78,6 +84,40 @@ def mypage(user_name):
     user_id = User.query.filter_by(name=user_name).all()[0].id
     contents = Content.query.filter_by(user_id=user_id).all()
     return render_template("mypage.html",contents=contents)
+
+
+@app.route("/config/<user_name>")
+@login_required
+def config(user_name):
+    return render_template("config.html")
+
+
+@app.route("/config_submit", methods=["POST"])
+@login_required
+def config_submit():
+    user = User.query.filter_by(id=current_user.id).all()[0]
+    user.name = request.form["name"]
+    user.description = request.form["description"]
+    icon = request.files["icon"]
+    if icon.filename == "":
+        db.session.add(user)
+        db.session.commit()
+    else:
+        file_extension = icon.filename.rsplit('.', 1)[1]
+        if file_extension in ["jpg", "png"]:
+            icon = Image.open(request.files["icon"])
+            icon_resize = icon.resize((256, 256))
+            old_file_name = user.icon_file_name
+            new_file_name = "".join(random.choices(string.ascii_letters+string.digits,k=20))+".jpg"
+            user.icon_file_name = new_file_name
+            db.session.add(user)
+            db.session.commit()
+            icon_resize.save("app/static/uploads/"+new_file_name)
+            if (old_file_name is not None) and os.path.exists("app/static/uploads/"+old_file_name):
+                os.remove("app/static/uploads/"+old_file_name)
+        else:
+            abort(404)
+    return redirect("mypage/" + current_user.name)
 
 
 @app.route("/logout")
