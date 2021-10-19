@@ -67,6 +67,8 @@ def sign_up_submit():
         confirm_password = request.form["confirm_password"]
         if password != confirm_password:
             return redirect(url_for("sign_up"))
+        elif password == '' and confirm_password == '':
+            return redirect(url_for("sign_up"))
         else:
             hashed_password = sha256((user_name + password + key.SALT).encode("utf-8")).hexdigest()
             new_user = User(name=user_name,hashed_password=hashed_password)
