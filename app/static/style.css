@@ -1,0 +1,9 @@
+.good-btn:hover{
+	color : pink;
+	font-size : 1.1em;
+	cursor : pointer;
+}
+
+.good-btn-active{
+	color: red;
+}

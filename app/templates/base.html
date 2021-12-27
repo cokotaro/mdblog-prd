@@ -14,7 +14,7 @@
             {% if current_user.is_authenticated %}
             <a href="/edit/new"><i class="far fa-file fa-2x nav-icon" title="新規作成"></i></a>
             <a href="/mypage/{{current_user.name}}">
-                <img src="static/uploads/{{current_user.icon_file_name}}" width="32" height="32" title="{{current_user.name}}">
+                <img src="/static/uploads/{{current_user.icon_file_name}}" width="32" height="32" title="{{current_user.name}}">
                 {{current_user.name}}
             </a>
             <a href="/config/{{current_user.name}}"><i class="fas fa-user-cog fa-2x nav-icon" title="ユーザー設定"></i></a>

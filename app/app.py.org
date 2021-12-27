@@ -1,6 +1,3 @@
-from datetime import datetime
-from threading import currentThread
-from types import MethodDescriptorType
 from flask import Flask,render_template,request,redirect,url_for,abort
 from flask_login import LoginManager,login_user,logout_user,login_required,current_user
 from hashlib import sha256
@@ -14,7 +11,7 @@ from app import key
 
 app = Flask(__name__)
 
-from app.models import db,Content,User,ContentGoodUser
+from app.models import db,Content,User
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config["SECRET_KEY"] = key.SECRET_KEY
@@ -149,28 +146,6 @@ def good():
         content.good_count = content.good_count + 1
     db.sesion.commit()
     return str(content.good_count)
-
-
-@app.route("/edit/new")
-@login_required
-def edit():
-    return render_template("edit.html")
-
-
-@app.route("/edit/submit", methods=["POST"])
-@login_required
-def edit_submit():
-    '''
-    処理が終わり次第トップページへもどス
-    '''
-    title = request.form.get('blog_title')
-    content = request.form.get('md_blog')
-    now = datetime.now()
-    pub_date = now.strftime("%Y-%m-%d")
-    user_id = current_user.id
-    user = current_user.name
-    return user
-#    return redirect(url_for("/"))
 
 
 @app.route("/logout")

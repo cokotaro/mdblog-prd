@@ -6,7 +6,20 @@
 
 {% for content in contents %}
 <div>
-	<p>{{content.user.name}}:<a href="/content/{{content.id}}">{{content.title}}</a>  //  {{content.good_num}} good</p>
+	<p>{{content.user.name}}:
+		<a href="/content/{{content.id}}">{{content.title}}</a>
+		//  
+		{% if current_user.is_authenticated %}
+		    {% if content.good %}
+			<i class="far fa-heart good-btn goot-btn-active" data-content_id="{{content.id}}"></i>
+			{% else %}
+			<i class="far fa-heart goot-btn" data-content_id="{{content.id}}"></i>
+			{% endif %}
+		{% else %}
+		<i class="far fa-heart" data-content_id="{{content.id}}"></i>
+		{% endif %}
+		<span class="content_good_count"> {{content.good_count}}</span>
+	</p>
 </div>
 {% endfor %}
 
