@@ -1,6 +1,7 @@
 from datetime import datetime
 from threading import currentThread
 from types import MethodDescriptorType
+from wsgiref.simple_server import WSGIRequestHandler
 from flask import Flask,render_template,request,redirect,url_for,abort
 from flask_login import LoginManager,login_user,logout_user,login_required,current_user
 from hashlib import sha256
@@ -147,7 +148,7 @@ def good():
         content_good_user = ContentGoodUser(content_id=content_id,user_id=user_id)
         db.session.add(content_good_user)
         content.good_count = content.good_count + 1
-    db.sesion.commit()
+    db.session.commit()
     return str(content.good_count)
 
 
@@ -161,7 +162,8 @@ def edit():
 @login_required
 def edit_submit():
     '''
-    処理が終わり次第トップページへもどス
+    DB にフォームから送信された情報を書き込み、
+    その後トップページにリダイレクトさせる
     '''
     title = request.form.get('blog_title')
     content = request.form.get('md_blog')
@@ -169,8 +171,12 @@ def edit_submit():
     pub_date = now.strftime("%Y-%m-%d")
     user_id = current_user.id
     user = current_user.name
-    return user
-#    return redirect(url_for("/"))
+
+    blog_text = Content(title=title, body=content, pub_date=pub_date, user_id=user_id)
+    db.session.add(blog_text)
+    db.session.commit()
+
+    return redirect(url_for("/"))
 
 
 @app.route("/logout")
