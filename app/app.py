@@ -176,7 +176,7 @@ def edit_submit():
     db.session.add(blog_text)
     db.session.commit()
 
-    return redirect(url_for("/"))
+    return redirect(url_for("index"))
 
 
 @app.route("/logout")

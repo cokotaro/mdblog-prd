@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from app.app import app
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:kake123!@localhost/mdblog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://kake:iGKk9J01@localhost/mdblog'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
